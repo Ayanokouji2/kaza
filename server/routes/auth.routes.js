@@ -1,19 +1,20 @@
 import { Router } from "express";
 import asyncHandler from "../utils/asyncHandler.js";
-import { login, signup, logout } from '../controller/auth.controller.js'
+import { login, signup, logout } from "../controller/auth.controller.js";
+import validateRequest from "../middleware/validator.js";
+import loginSchema from "../schema/login.js";
+import signupSchema from "../schema/signup.js";
+
 const authRouter = Router();
 
 authRouter
-    .route("/login")
-    .post(asyncHandler(login))
+  .route("/login")
+  .post(validateRequest(loginSchema), asyncHandler(login));
 
 authRouter
-    .route('/signup')
-    .post(asyncHandler(signup))
-    
-authRouter
-    .route('/logout')
-    .get(asyncHandler(logout))
+  .route("/signup")
+  .post(validateRequest(signupSchema), asyncHandler(signup));
 
+authRouter.route("/logout").get(asyncHandler(logout));
 
 export default authRouter;

@@ -1,16 +1,31 @@
+import prismadb from "../lib/PrismaClient.js";
 import { ApiError } from "../utils/handleApiError.js";
 
 export const updateUser = async( req, res ) => {
     const { bio , name } = req.body;
+    const avatar = req.file.path;
 
-    if(!bio && !name)
-        throw new ApiError(400, "Enter any field to update")
+    const userId = req._id;
 
-    const updateField = [bio, name].filter(Boolean);
+    const user = await prismadb.profile.findUnique({
+        where:{
+            userId 
+        },
+        select:{
+            avatar : true
+        }
+    })
 
-    console.log(updateField)
+    console.log(user, "This is the user");
 
-
-
+    await prismadb.profile.update({
+        where:{
+            username
+        },
+        data:{
+            bio,
+            name,
+        }
+    })
 
 }

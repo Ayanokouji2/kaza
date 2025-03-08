@@ -1,7 +1,7 @@
 import prismadb from "../lib/PrismaClient.js";
 import bcrypt from "bcrypt";
 import { ApiError } from "../utils/handleApiError.js";
-import * as JWT from "jsonwebtoken";
+import JWT from "jsonwebtoken";
 import { cookieOptions, JWT_SECRET_KEY } from "../constant/config.js";
 
 export const login = async (req, res) => {
@@ -10,7 +10,7 @@ export const login = async (req, res) => {
 	const user = await prismadb.user.findFirst({
 		where: {
 		    OR: [{ username }, { email }],
-		},
+		}
 	});
 
 	if (!user) throw new ApiError(401, "signUp first");
@@ -40,8 +40,11 @@ export const signup = async (req, res) => {
             OR:[
                 {email}, {username}
             ]
+        },
+        select:{
+            password: false
         }
-     });
+    });
 
 	if (user) {
 		throw new ApiError(400, "Email or Username already exists");

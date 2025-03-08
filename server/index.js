@@ -1,7 +1,6 @@
-import 'dotenv/config.js'
+import 'dotenv/config'
 import app from './app.js'
-
-const PORT = 5000 || process.env.PORT;
+import { PORT } from './constant/config.js'
 
 
 app.listen(PORT, () => {
