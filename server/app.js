@@ -1,13 +1,17 @@
 import express from 'express';
-import { protectRoute } from './middleware/auth';
-import authRouter from './routes/auth.routes';
+import authRouter from './routes/auth.routes.js';
+import { handleApiError } from './middleware/errorhandle.js';
+import userRouter from './routes/user.routes.js';
 
 const app = express();
 
 app.use(express.json());
 
 
-app.use(protectRoute);
-app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
+
+
+app.use(handleApiError)
 
 export default app;

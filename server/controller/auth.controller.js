@@ -1,8 +1,8 @@
 import prismadb from "../lib/PrismaClient.js";
 import bcrypt from "bcrypt";
-import { ApiError } from "../utils/handleApiError";
+import { ApiError } from "../utils/handleApiError.js";
 import * as JWT from "jsonwebtoken";
-import { cookieOptions, JWT_SECRET_KEY } from "../constant/config";
+import { cookieOptions, JWT_SECRET_KEY } from "../constant/config.js";
 
 export const login = async (req, res) => {
 	const { email, password, username } = req.body;

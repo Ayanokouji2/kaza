@@ -1,28 +1,25 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
-}
-
-model User {
-    id       Int      @id @default(autoincrement())
-    email    String   @unique @db.VarChar(255)
-    username String   @unique @db.VarChar(255)
-    password String   @db.VarChar(255)
-    Profile  Profile?
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Profile {
-    id     Int  @id @default(autoincrement())
-    userId Int  @unique
-    User   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique(map: "Profile_userId_key")
+  avatar String?
+  bio    String?
+  name   String
+  User   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "Profile_userId_fkey")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique(map: "User_email_key") @db.VarChar(255)
+  username String   @unique(map: "User_username_key") @db.VarChar(255)
+  password String   @db.VarChar(255)
+  Profile  Profile?
 }
