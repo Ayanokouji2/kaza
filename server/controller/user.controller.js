@@ -19,7 +19,7 @@ export const updateUser = async (req, res) => {
 		throw new ApiError(404, "non profile found");
 	}
 
-	if (profilePath && userProfile.avatar) {
+	if (avatarPath && userProfile.avatar) {
 		await deleteFromCloudinary(userProfile.avatar.public_id);
 	}
 
