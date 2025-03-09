@@ -16,14 +16,14 @@ export const updateUser = async (req, res) => {
 	});
 
 	if (!userProfile) {
-		throw new ApiError(404, "non profile found");
+		throw new ApiError(404, "no profile found");
 	}
 
 	if (avatarPath && userProfile.avatar) {
 		await deleteFromCloudinary(userProfile.avatar.public_id);
 	}
 
-	const result = await uploadToCloudinary(avatarPath) || userProfile.avatar;
+	const result = await uploadToCloudinary(avatarPath) ;
 
 	const userprofile = await prismadb.profile.update({
 		where: {
