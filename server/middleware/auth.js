@@ -19,7 +19,6 @@ export const protectRoute = async (req, _, next) => {
 		req._id = payload._id;
 		req.username = payload.username
 
-		console.log(payload, "from protect")
 
 		next();
 	} catch (err) {

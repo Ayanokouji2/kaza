@@ -18,7 +18,6 @@ export const login = async (req, res) => {
 	const isCorrectPassword = await bcrypt.compare(password, user.password);
 	if (!isCorrectPassword) throw new ApiError(401, "Invalid credentials");
 
-    console.log(user.username, "the user frm logni")
 
 	const token = JWT.sign(
 		{
