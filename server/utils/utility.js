@@ -1,6 +1,10 @@
 import { v2 as cloudinary } from "cloudinary";
-const uploadToCloudinary = async (file) => {
-	const result = await cloudinary.uploader.upload(file, {
+const uploadToCloudinary = async (pathname) => {
+	if(!pathname){
+		return null;
+	}
+	
+	const result = await cloudinary.uploader.upload(pathname, {
 		resource_type: "image",
 	});
 	const profile = {

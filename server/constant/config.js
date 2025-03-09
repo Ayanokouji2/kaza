@@ -3,10 +3,9 @@ dotenv.config();
 const PORT = process.env.PORT || 6000 ;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const CLOUD_NAME = process.env.CLOUD_NAME;
-const CLOUD_API_KEY = process.env.API_KEY;
-const CLOUD_API_SECRET = process.env.API_SECRET;
+const CLOUD_API_KEY = process.env.CLOUD_API_KEY;
+const CLOUD_API_SECRET = process.env.CLOUD_API_SECRET;
 
-console.log(JWT_SECRET_KEY, "HElpp")
 
 const cookieOptions = {
 	httpOnly: true,

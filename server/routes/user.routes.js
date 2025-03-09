@@ -8,8 +8,8 @@ import updateUserSchema from "../schema/updateUser.js"
 
 const userRouter = Router();
 
-userRouter.use(protectRoute);
 
+userRouter.use(protectRoute);
 userRouter
 	.route("/")
 	.patch(

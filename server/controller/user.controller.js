@@ -1,39 +1,44 @@
 import prismadb from "../lib/PrismaClient.js";
 import { ApiError } from "../utils/handleApiError.js";
+import { deleteFromCloudinary, uploadToCloudinary } from "../utils/utility.js";
 
-export const updateUser = async( req, res ) => {
-    const { bio , name } = req.body;
+export const updateUser = async (req, res) => {
+	const { bio, name } = req.body;
 
-    // console.log("THe command is here",req )
-    // const avatar = req?.file?.path;
+	const avatarPath = req?.file?.path;
 
-    const userId = req._id;
+	const userId = req._id;
 
-    const user = await prismadb.profile.findUnique({
-        where:{
-            userId:userId 
-        }
-    })
+	const userProfile = await prismadb.profile.findUnique({
+		where: {
+			userId: userId,
+		},
+	});
 
-    const username = req.username;
-    console.log(req._id, "This is the user", req.username);
+	if (!userProfile) {
+		throw new ApiError(404, "non profile found");
+	}
 
-    const userprofile = await prismadb.profile.update({
-        where:{
-            userId,
-            username
-        },
-        data:{
-            bio,
-            name,
-        }
-    })
+	if (profilePath && userProfile.avatar) {
+		await deleteFromCloudinary(userProfile.avatar.public_id);
+	}
 
-    
-    
-    return res.status(200).json({
-        success: true,
-        message: "User Updated ..!",
-        userprofile
-    })
-}
+	const result = await uploadToCloudinary(avatarPath);
+
+	const userprofile = await prismadb.profile.update({
+		where: {
+			userId,
+		},
+		data: {
+			bio,
+			name,
+			avatar: result,
+		},
+	});
+
+	return res.status(200).json({
+		success: true,
+		message: "User Updated ..!",
+		userprofile,
+	});
+};
