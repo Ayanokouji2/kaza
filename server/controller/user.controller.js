@@ -23,7 +23,7 @@ export const updateUser = async (req, res) => {
 		await deleteFromCloudinary(userProfile.avatar.public_id);
 	}
 
-	const result = await uploadToCloudinary(avatarPath);
+	const result = await uploadToCloudinary(avatarPath) || userProfile.avatar;
 
 	const userprofile = await prismadb.profile.update({
 		where: {
