@@ -4,6 +4,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { updateUser } from "../controller/user.controller.js";
 import validateRequest from "../middleware/validator.js";
 import upload from "../middleware/multer.js";
+import updateUserSchema from "../schema/updateUser.js"
 
 const userRouter = Router();
 
@@ -12,7 +13,7 @@ userRouter.use(protectRoute);
 userRouter
 	.route("/")
 	.patch(
-		validateRequest(updateUser),
+		validateRequest(updateUserSchema),
 		upload.single("avatar"),
 		asyncHandler(updateUser)
 	);

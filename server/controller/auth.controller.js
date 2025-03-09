@@ -9,8 +9,8 @@ export const login = async (req, res) => {
 
 	const user = await prismadb.user.findFirst({
 		where: {
-		    OR: [{ username }, { email }],
-		}
+			OR: [{ username }, { email }],
+		},
 	});
 
 	if (!user) throw new ApiError(401, "signUp first");
@@ -18,47 +18,60 @@ export const login = async (req, res) => {
 	const isCorrectPassword = await bcrypt.compare(password, user.password);
 	if (!isCorrectPassword) throw new ApiError(401, "Invalid credentials");
 
-	const token = JWT.sign({
-		_id: user.id,
-		username,
-	}, JWT_SECRET_KEY);
+    console.log(user, "the user frm logni")
 
-    res.cookie("token",token, cookieOptions);
-    return res.status(200).json({
-        sucess: true,
-        message: "User Successfully LoggedIn ... !",
-        token,
-        user
-    })
+	const token = JWT.sign(
+		{
+			_id: user?.id,
+			username,
+		},
+		JWT_SECRET_KEY
+	);
+
+	res.cookie("token", token, cookieOptions);
+	return res.status(200).json({
+		sucess: true,
+		message: "User Successfully LoggedIn ... !",
+		token,
+		user,
+	});
 };
 
 export const signup = async (req, res) => {
-	const { username, email, password } = req.body;
+	const { username, email, password, name } = req.body;
 
-	const user = await prismadb.user.findFirst({ 
-        where:{
-            OR:[
-                {email}, {username}
-            ]
-        },
-        select:{
-            password: false
-        }
-    });
+	const user = await prismadb.user.findFirst({
+		where: {
+			OR: [{ email }, { username }],
+		},
+	});
 
 	if (user) {
 		throw new ApiError(400, "Email or Username already exists");
 	}
 
-    const hashPassword = await bcrypt.hash(password, 10);
+	const hashPassword = await bcrypt.hash(password, 10);
 
 	const newUser = await prismadb.user.create({
-        data:{
-            email,
-            username,
-            password : hashPassword
-        }
-    });
+		data: {
+			email,
+			username,
+			password: hashPassword,
+			Profile: {
+				create: {
+					name
+				},
+			},
+		},
+		select: {
+			id: true,
+			username: true,
+			email: true,
+			Profile: {
+                select: {name: true}
+            },
+		},
+	});
 
 	return res.status(201).json({
 		success: true,
@@ -67,10 +80,10 @@ export const signup = async (req, res) => {
 	});
 };
 
-export const logout = async(req, res) => {
-    res.cookie("token", "", { ...cookieOptions, maxAge: 0 });
-    return res.status(200).json({
-      success: true,
-      message: "You have been logged out",
-    });
+export const logout = async (req, res) => {
+	res.cookie("token", "", { ...cookieOptions, maxAge: 0 });
+	return res.status(200).json({
+		success: true,
+		message: "You have been logged out",
+	});
 };

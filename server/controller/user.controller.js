@@ -3,23 +3,24 @@ import { ApiError } from "../utils/handleApiError.js";
 
 export const updateUser = async( req, res ) => {
     const { bio , name } = req.body;
-    const avatar = req.file.path;
+
+    // console.log("THe command is here",req )
+    // const avatar = req?.file?.path;
 
     const userId = req._id;
 
     const user = await prismadb.profile.findUnique({
         where:{
-            userId 
-        },
-        select:{
-            avatar : true
+            userId:userId 
         }
     })
 
-    console.log(user, "This is the user");
+    const username = req.username;
+    console.log(req._id, "This is the user", req.username);
 
-    await prismadb.profile.update({
+    const userprofile = await prismadb.profile.update({
         where:{
+            userId,
             username
         },
         data:{
@@ -28,4 +29,11 @@ export const updateUser = async( req, res ) => {
         }
     })
 
+    
+    
+    return res.status(200).json({
+        success: true,
+        message: "User Updated ..!",
+        userprofile
+    })
 }

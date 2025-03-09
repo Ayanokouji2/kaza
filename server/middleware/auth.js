@@ -15,7 +15,7 @@ export const protectRoute = async (req, _, next) => {
 		if (!payload) {
 			throw new ApiError(400, "Invalid token");
 		}
-
+		
 		req._id = payload._id;
 		req.username = payload.username
 
